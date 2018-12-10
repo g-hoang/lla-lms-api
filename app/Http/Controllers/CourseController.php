@@ -111,6 +111,37 @@ class CourseController extends ApiController
         $course->saveOrFail();
         return $this->respondSuccess('Course updated', CourseResource::make($course));
     }
+    
+    /**
+     * Change user is_active state
+     *
+     * @param int     $id      Id
+     * @param Request $request Http Request
+     *
+     * @throws AuthenticationException
+     * @return mixed
+     */
+    public function updateStatus($id, Request $request)
+    {
+        $this->authorize('course.update');
+        
+        if ($course = Course::find($id)) {
+            if (Auth::user()->cant('update', $course)) {
+                throw new AuthenticationException();
+            }
+            $state = $request->post('active');
+            if (in_array($state, [1, 0])) {
+                if ($course->changeIsActiveState($state)) {
+                    return $this->respondSuccess('Status updated');
+                };
+            }
+
+            return $this->invalidArguments('Invalid State Value');
+
+        }
+
+        return $this->respondNotFound('User Not Found');
+    }
 
     /**
      * Remove the specified resource from storage.

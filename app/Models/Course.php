@@ -29,7 +29,7 @@ class Course extends Model
             }
         );
 
-        $sortable_fields = ['name','created_at'];
+        $sortable_fields = ['name','created_at','active.name'];
         $sort_by = 'name';
 
         if (in_array($search->get('sortBy'), $sortable_fields)) {
@@ -48,5 +48,28 @@ class Course extends Model
     public function units()
     {
         return $this->hasMany(Unit::class);
+    }
+    
+    public function getStatusName()
+    {
+        return $this->is_active ? 'Active' : 'Inactive';
+    }
+    /**
+     * Update is_active state
+     *
+     * @param bool $value true or false
+     *
+     * @return bool
+     */
+    public function changeIsActiveState($value)
+    {
+        $this->is_active = $value;
+
+        if ($this->save()) {
+            $this->fireModelEvent('statusChanged', false);
+            return true;
+        }
+
+        return false;
     }
 }

@@ -56,7 +56,7 @@ Route::group(
             'CourseController',
             ['except' => ['edit', 'create']]
         );
-
+		Route::post('course/{id}/update-status', 'CourseController@updateStatus');
         // Units
         Route::resource(
             '/unit',
