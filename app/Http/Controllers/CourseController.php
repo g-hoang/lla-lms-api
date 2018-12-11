@@ -130,6 +130,7 @@ class CourseController extends ApiController
                 throw new AuthenticationException();
             }
             $state = $request->post('active');
+
             if (in_array($state, [1, 0])) {
                 if ($course->changeIsActiveState($state)) {
                     return $this->respondSuccess('Status updated');
@@ -142,7 +143,6 @@ class CourseController extends ApiController
 
         return $this->respondNotFound('User Not Found');
     }
-
     /**
      * Remove the specified resource from storage.
      *

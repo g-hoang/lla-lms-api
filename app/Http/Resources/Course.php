@@ -19,8 +19,8 @@ class Course extends Resource
         $return =  [
             'id' => $this->id,
             'name' => $this->name,
-            'is_active' => [
-                'value' => $this->is_active,
+            'is_public' => [
+                'value' => $this->is_public,
                 'name' => $this->getStatusName(),
             ],
             'created_at' => ($this->created_at ? $this->created_at->format('Y-m-d H:i:s') : ''),
@@ -30,5 +30,4 @@ class Course extends Resource
 
         return $return;
     }
-
 }

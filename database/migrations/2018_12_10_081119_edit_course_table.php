@@ -14,7 +14,7 @@ class EditCourseTable extends Migration
     public function up()
     {
         Schema::table('courses', function (Blueprint $table) {
-            $table->boolean('is_active')->default(true);
+            $table->boolean('is_public')->default(true);
         });
     }
 
@@ -25,6 +25,6 @@ class EditCourseTable extends Migration
      */
     public function down()
     {
-        DB::statement("ALTER TABLE `courses` DROP COLUMN is_active;");
+        DB::statement("ALTER TABLE `courses` DROP COLUMN is_public;");
     }
 }

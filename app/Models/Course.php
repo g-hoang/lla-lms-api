@@ -63,7 +63,7 @@ class Course extends Model
      */
     public function changeIsActiveState($value)
     {
-        $this->is_active = $value;
+        $this->is_public = $value;
 
         if ($this->save()) {
             $this->fireModelEvent('statusChanged', false);
