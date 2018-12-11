@@ -52,7 +52,7 @@ class Course extends Model
     
     public function getStatusName()
     {
-        return $this->is_active ? 'Active' : 'Inactive';
+        return $this->is_public ? 'Active' : 'Inactive';
     }
     /**
      * Update is_active state
