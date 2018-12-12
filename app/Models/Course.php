@@ -9,7 +9,14 @@ use Illuminate\Database\Query\Builder;
 class Course extends Model
 {
     protected $fillable = ['name'];
-
+	/**
+     * The attributes that should be Converted
+     *
+     * @var array
+     */
+    protected $casts = [
+        'is_public' => 'boolean'
+    ];
     /**
      * Course Search
      *
