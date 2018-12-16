@@ -293,6 +293,32 @@ class ActivityComponentController extends ApiController
         $data['url'] = ''; // we create temporary URLs on the fly
         return $data;
     }
+    
+    /**
+     * @param ActivityComponent $component
+     * @param $video
+     * @param $data
+     * @return bool|mixed
+     */
+    public function uploadVideo(ActivityComponent $component, $video, $data)
+    {
+        $data = json_decode($data, true);
+
+        $s3 = Storage::disk('s3');
+
+        $file_name = preg_replace("/[^A-Za-z0-9\_\-\.]/", '-', $video->getClientOriginalName());
+        $path_prefix = 'components/' . $component->id ;
+
+        $ret = $s3->put($path_prefix . "-" . $file_name, file_get_contents($video));
+
+        if (!$ret) {
+            return false;
+        }
+
+        $data['filename'] = $file_name;
+        $data['url'] = ''; // we create temporary URLs on the fly
+        return $data;
+    }
 
     /**
      * @param ActivityComponent $component
@@ -302,14 +328,12 @@ class ActivityComponentController extends ApiController
     private function updateComponentMetaData(ActivityComponent $component, Request $request)
     {
         $data = $request->data;
-
+		
         if ($request->component_type == 'TEXT_BLOCK') {
             $value = nl2br($data['value']);
-
             $data['value'] = Purifier::clean($value);
-            
             return $data;
-
+            
         } elseif ($request->component_type == 'IMAGE') {
             if ($image = $request->file('file')) {
                 return $this->uploadImage($component, $image, $data);
@@ -319,6 +343,12 @@ class ActivityComponentController extends ApiController
         } elseif ($request->component_type == 'AUDIO') {
             if ($audio = $request->file('audio')) {
                 return $this->uploadAudio($component, $audio, $data);
+            };
+            return json_decode($data, true);
+        
+        } elseif ($request->component_type == 'VIDEO') {
+            if ($audio = $request->file('video')) {
+                return $this->uploadVideo($component, $video, $data);
             };
             return json_decode($data, true);
 

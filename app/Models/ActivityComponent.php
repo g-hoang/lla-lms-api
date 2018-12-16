@@ -91,6 +91,10 @@ class ActivityComponent extends Model
             $content = Storage::disk('s3')->get('components/'.$this->id.'-'.$this->data['filename']);
 
             Storage::disk('s3')->put('components/'.$newComponent->id.'-'.$this->data['filename'], $content);
+        } elseif ($this->component_type == 'VIDEO' && isset($this->data['filename'])) {
+            $content = Storage::disk('s3')->get('components/'.$this->id.'-'.$this->data['filename']);
+
+            Storage::disk('s3')->put('components/'.$newComponent->id.'-'.$this->data['filename'], $content);
         }
 
         $newComponent->fill([

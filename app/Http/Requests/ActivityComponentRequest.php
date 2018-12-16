@@ -63,6 +63,20 @@ class ActivityComponentRequest extends FormRequest
             },
             "File type not supported."
         );
+        
+        $validationFactory->extend(
+            'component_file_mp4',
+            function ($attribute, $value, $parameters) {
+                if (!empty($value->getClientOriginalExtension())
+                    && ($value->getClientOriginalExtension() == 'mp4' || $value->getClientOriginalExtension() == 'MP4')
+                ) {
+                    return true;
+                } else {
+                    return false;
+                }
+            },
+            "File type not supported."
+        );
 
         $validationFactory->extend(
             'required_without_filename',
@@ -139,7 +153,7 @@ class ActivityComponentRequest extends FormRequest
     {
         $rules = [
             'activity_id' => 'required|integer',
-            'component_type' => 'required|in:IMAGE,AUDIO,TEXT_BLOCK,MCQ,TEXT_INPUT,TEXT_OUTPUT,GAP_FILL'
+            'component_type' => 'required|in:IMAGE,AUDIO,TEXT_BLOCK,MCQ,TEXT_INPUT,TEXT_OUTPUT,GAP_FILL,VIDEO'
         ];
 
         switch ($this->get('component_type')) {
@@ -156,6 +170,12 @@ class ActivityComponentRequest extends FormRequest
                 $rules['data'] = $this->rulesForAudio();
                 if ($this->method() == 'PUT' || $this->method() == 'PATCH') {
                     $rules['audio'] ='required|component_file_mp3|max:5120|min:1';
+                }
+                break;
+            case 'VIDEO':
+                $rules['data'] = $this->rulesForVideo();
+                if ($this->method() == 'PUT' || $this->method() == 'PATCH') {
+                    $rules['video'] ='required|component_file_mp4|max:5120|min:1';
                 }
                 break;
             case 'TEXT_INPUT':
@@ -215,6 +235,12 @@ class ActivityComponentRequest extends FormRequest
     }
 
     private function rulesForAudio()
+    {
+        return 'required|component_data_label';
+
+    }
+    
+    private function rulesForVideo()
     {
         return 'required|component_data_label';
 
@@ -402,6 +428,9 @@ class ActivityComponentRequest extends FormRequest
             'audio.mimes'  => 'File type not supported.',
             'audio.max'  => 'File size too large.',
             'audio.min'  => 'File size too small.',
+            'video.mimes'  => 'File type not supported.',
+            'video.max'  => 'File size too large.',
+            'video.min'  => 'File size too small.',
         ];
     }
 }

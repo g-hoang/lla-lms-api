@@ -35,6 +35,14 @@ class ActivityComponent extends Resource
                 );
                 $data['url'] = $url;
             }
+			
+			if ($this->component_type == 'VIDEO') {
+                $url = $s3->temporaryUrl(
+                    $path_prefix . "-" . $data['filename'],
+                    now()->addMinutes(5)
+                );
+                $data['url'] = $url;
+            }
 
             if ($this->component_type == 'IMAGE') {
                 $url_small = $s3->temporaryUrl(
