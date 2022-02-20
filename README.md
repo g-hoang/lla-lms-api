@@ -1,6 +1,8 @@
 # LinkUp Backend (API)
 
-- checkout from repo - git clone git@github.com:JoSayers/linkup_back.git
+This is a backend project for an E-learning platform
+
+- checkout from repo
 - run "_composer install_"
 - restore development database dump (get it from dev server)
 - create/update .env file and update to match local setup (get a copy from dev server)
